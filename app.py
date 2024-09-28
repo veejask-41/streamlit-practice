@@ -14,7 +14,7 @@ input_image = st.file_uploader(
 if st.button('Generate', use_container_width=True):
     if input_image:
         with st.spinner('Processing...'):
-            time.sleep(3)
+            time.sleep(1)
             temp_dir = tempfile.mkdtemp()
             path = os.path.join(temp_dir, input_image.name)
             with open(path, "wb") as f:
@@ -32,9 +32,25 @@ if st.button('Generate', use_container_width=True):
             
             # st.image(slices, width=150, clamp=True, channels='gray', use_column_width=True)
 
+            # cols = cycle(st.columns(3))
+            # axes = ['x','y','z']
+            # slices_1 = []
+            # for i,ax in enumerate(axes):
+            #     slice = next(cols).slider(str('axis_'+ax), 0, input_mri_shape[i]-1, input_mri_shape[i]//2, key=i)
+            #     match ax:
+            #         case 'x':
+            #             slices_1.append(input_mri_data[slice, :, :]/input_mri_data.max())
+            #         case 'y':
+            #             slices_1.append(input_mri_data[:, slice, :]/input_mri_data.max())
+            #         case 'z':
+            #             slices_1.append(input_mri_data[:, :, slice]/input_mri_data.max())
+             
             cols = cycle(st.columns(3)) # st.columns here since it is out of beta at the time I'm writing this
-            for idx, slice in enumerate(slices):
-                next(cols).image(slice, width=150)
+            for i in range(3):
+                next(cols).image(slices[i], width=150, clamp=True, channels='gray')
+            # for idx, slice in enumerate(slices):
+            #     next(cols).image(slice, width=150)
+
 
             with open(path, 'rb') as f:
                 data = f.read()
